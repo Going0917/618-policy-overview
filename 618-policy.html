@@ -17,6 +17,23 @@
   font-weight:300;font-display:swap;
 }
 </style>
+<script>
+(function(){
+  const cdns = [
+    'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
+    'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+  ];
+  let i = 0;
+  function load() {
+    if (i >= cdns.length) return;
+    const s = document.createElement('script');
+    s.src = cdns[i++]; s.onerror = load;
+    document.head.appendChild(s);
+  }
+  load();
+})();
+</script>
 <style>
 :root{
   --bg:#0b1a3b;
@@ -367,25 +384,20 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
 @media(max-width:768px){
   .wrap{padding:0 16px}
   .hero{padding:40px 16px;min-height:auto}
-  .hero h1{font-size:28px;letter-spacing:-0.5px}
-  .hero .sub{font-size:14px}
-  .hero .period{font-size:12px;margin-bottom:24px}
+  .hero h1{font-size:28px}
   .cards{grid-template-columns:1fr}
   .card.expanded{grid-column:auto}
   .tabs{flex-wrap:wrap;gap:6px}
   .panel{padding:40px 0}
   .timeline-hero{padding:16px 12px}
-  .tl-phases-flex{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important}
+  .tl-phases-flex{display:grid!important;grid-template-columns:repeat(3,1fr)!important}
   .tl-phases-flex>div{border-right:1px solid rgba(80,160,255,.08)!important;border-bottom:1px solid rgba(80,160,255,.08)!important;padding:14px 8px!important;flex:none!important}
   .tl-phases-flex>div:nth-child(3n){border-right:none!important}
   .tl-phases-flex>div:nth-child(n+4){border-bottom:none!important}
-  .tl-phases-flex>div>div:first-child{font-size:14px!important}
-  .tl-phases-flex>div>div:nth-child(3){font-size:18px!important}
   .tl-info-grid{grid-template-columns:1fr!important}
   .shop-policy-grid{grid-template-columns:1fr!important}
-  .cmp-table{display:block;overflow-x:auto;white-space:nowrap}
+  .cmp-table{display:block;overflow-x:auto}
   .card-detail{overflow-x:auto}
-  .sub-dim-label{font-size:11px;margin-top:32px}
   .panel-heading{font-size:24px}
   .tl-svg-bg{display:none!important}
 }
@@ -868,17 +880,6 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
   <p style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px">← 可横向滑动查看完整时间轴 →</p>
 </div>
 
-<div class="tb-status" id="tbStatus">点击文字即可编辑<br>Cmd+S 导出</div>
-  <button onclick="exportHTML()">💾 导出 HTML</button>
-  <button class="btn-reset" onclick="resetContent()">↩️ 清除改动</button>
-</div>
-
-<div class="et-status" id="etStatus">选择导出模式</div>
-  <div class="et-scale"><span class="et-scale-label">分辨率</span><button data-scale="1">1x</button><button data-scale="2" class="active">2x</button><button data-scale="3">3x</button></div>
-  <button onclick="exportFullPage()">📜 整页长图</button>
-  <button onclick="exportCurrentSection()">📸 当前Tab</button>
-  <button onclick="exportAllSections()">📚 批量导出</button>
-</div>
 
 <!-- ===== JS ===== -->
 <script>
