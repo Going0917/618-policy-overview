@@ -250,12 +250,16 @@ body{
 
 /* 点击提示 */
 .card .hint{
-  position:absolute;top:14px;right:16px;
-  font-size:9px;color:var(--text-muted);transition:color .2s;
+  position:absolute;top:12px;right:14px;
+  font-size:10px;font-weight:700;
+  padding:4px 12px;border-radius:6px;
+  background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);
+  color:#fb923c;transition:all .2s;cursor:pointer;
 }
-.card:hover .hint{color:#fb923c}
+.card:hover .hint{background:rgba(249,115,22,.2);border-color:#fb923c;color:#fff}
+.card.expanded .hint{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:var(--text-muted)}
 .card.expanded .hint::after{content:"收起 ↑"}
-.card:not(.expanded) .hint::after{content:"展开 ↓"}
+.card:not(.expanded) .hint::after{content:"▼ 展开详情"}
 
 /* ===== 矩阵 ===== */
 .matrix-wrap{
@@ -371,36 +375,19 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
   .tabs{flex-wrap:wrap;gap:6px}
   .panel{padding:40px 0}
   .timeline-hero{padding:16px 12px}
-  /* 时间轴6阶段：移动端改为3列2行网格 */
-  .tl-phases-flex{
-    display:grid!important;
-    grid-template-columns:repeat(3,1fr)!important;
-    gap:0!important;
-  }
-  .tl-phases-flex>div{
-    border-right:1px solid rgba(80,160,255,.08)!important;
-    border-bottom:1px solid rgba(80,160,255,.08)!important;
-    padding:14px 8px!important;
-    flex:none!important;
-  }
+  .tl-phases-flex{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important}
+  .tl-phases-flex>div{border-right:1px solid rgba(80,160,255,.08)!important;border-bottom:1px solid rgba(80,160,255,.08)!important;padding:14px 8px!important;flex:none!important}
   .tl-phases-flex>div:nth-child(3n){border-right:none!important}
   .tl-phases-flex>div:nth-child(n+4){border-bottom:none!important}
   .tl-phases-flex>div>div:first-child{font-size:14px!important}
   .tl-phases-flex>div>div:nth-child(3){font-size:18px!important}
-  /* 放量节奏说明：移动端单列 */
   .tl-info-grid{grid-template-columns:1fr!important}
-  /* 小店政策2列→单列 */
   .shop-policy-grid{grid-template-columns:1fr!important}
-  /* 表格横向可滚动 */
   .cmp-table{display:block;overflow-x:auto;white-space:nowrap}
   .card-detail{overflow-x:auto}
-  /* 子维度说明文字 */
   .sub-dim-label{font-size:11px;margin-top:32px}
   .panel-heading{font-size:24px}
-  /* Timeline网格：移动端单列 */
-  .timeline-grid{grid-template-columns:1fr!important}
-  /* 移动端隐藏SVG流量曲线（3列重排后坐标不匹配） */
-  .tl-phases-flex~svg,.tl-svg-bg{display:none!important}
+  .tl-svg-bg{display:none!important}
 }
 </style>
 </head>
@@ -519,16 +506,23 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
   <div class="panel-title">PART 01</div>
   <div class="panel-heading">微信小店 618 政策</div>
 
-  <!-- 2卡片横铺 -->
-  <div class="shop-policy-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <!-- 2卡片横铺（跨店满减2倍宽） -->
+  <div class="shop-policy-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
     <!-- 跨店满减 -->
     <div class="card" onclick="toggleCard(this)">
       <span class="hint"></span>
       <div class="card-head"><span class="card-icon">🎫</span><span class="card-title">跨店满减补贴（混资+全资双模式）</span></div>
-      <div class="card-brief">覆盖90%以上商家的核心大促机制，平台出资为消费者发放跨店优惠券</div>
+      <div class="card-brief">覆盖90%以上商家的核心大促机制，平台出资为消费者发放跨店优惠券。<strong style="color:#fbbf24">520追加补券已上线</strong>，券档从3档扩充至5档</div>
       <div class="card-action"><span class="label">做什么：</span>报名618活动 + 商品报名价 ≤ 30天普惠到手均价（剔除平台补贴/定向券后的真实价格）</div>
-      <div class="card-reward"><span class="label">享什么：</span>混资：平台出资上限12.5% + 商家按类目分摊<br>全资（K800品牌）：平台100%出资，商家0成本<br>→ 同时享ECPM精排扶持+召回加权</div>
-      <span class="card-time">⏰ 5/15-6/18 · 每周一发券</span>
+      <div class="card-reward"><span class="label">享什么：</span>混资：平台出资上限12.5% + 商家按类目分摊<br>全资（K800品牌）：平台100%出资，商家0成本<br>→ 同时享ECPM精排扶持+召回加权+场景协同推荐加权</div>
+      <div style="margin-top:10px;padding:10px 14px;border-radius:10px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);font-size:11px;color:var(--text-dim);line-height:1.7">
+        <span style="color:#fbbf24;font-weight:800">🎯 四场景行动（按优先级）：</span><br>
+        ❶ 已报名+在投放 → <strong style="color:#fbbf24">加基建、提出价</strong><br>
+        ❷ 主推品日耗>1000未报名 → <strong style="color:#fb923c">尽快报名618</strong><br>
+        ❸ 有广告在投但补贴品未投放 → <strong style="color:#fb923c">引导补贴品切入投放</strong><br>
+        ❹ 已报名未投放 → <strong style="color:#fbbf24">立即开投</strong>，投放即享扶持
+      </div>
+      <span class="card-time">⏰ 5/15-6/18 · 每周五自动发券（用户无需手动领取）</span>
       <div class="card-detail">
         <div class="detail-block">
           <div class="detail-label">📊 双模式对比</div>
@@ -543,14 +537,35 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
           </table>
         </div>
         <div class="detail-block">
-          <div class="detail-label">🎟️ 3档券面额</div>
+          <div class="detail-label">📄 报名指引 & QA文档</div>
           <div class="detail-text">
             <ul>
+              <li><a href="https://docs.qq.com/doc/DUnFxRnFrQ1FxdEFF?state=weworklogin" target="_blank" style="color:#93c5fd;text-decoration:underline"><strong>📘 全资商家报名指引 → K800品牌适用（点击查看）</strong></a></li>
+              <li><a href="https://docs.qq.com/doc/DUnVqUHFTZEJGbkJs?state=weworklogin" target="_blank" style="color:#93c5fd;text-decoration:underline"><strong>📗 混资商家报名指引 → 大盘商家适用（点击查看）</strong></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">🎟️ 5档券面额（5/22起扩充）</div>
+          <div class="detail-text">
+            <ul>
+              <li><strong>满80减10</strong>（≈8.75折）<span class="hl">← 5/22新增</span></li>
               <li><strong>满160减20</strong>（≈8.75折）</li>
               <li><strong>满400减50</strong>（≈8.75折）</li>
               <li><strong>满1000减100</strong>（≈9折）</li>
+              <li><strong>满2000减200</strong>（≈9折）<span class="hl">← 5/22新增</span></li>
             </ul>
-            <p style="margin-top:6px">整体折扣不高于<span class="hl">8.75折</span>，每周一新一轮发券</p>
+            <p style="margin-top:6px">整体折扣不高于<span class="hl">8.75折</span>，每周五自动发券（用户无需手动领取）</p>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">🔔 520追加补券节奏</div>
+          <div class="detail-text">
+            <ul>
+              <li><strong>5/20 0点：</strong>所有用户补满3张券（160-20 / 400-50 / 1000-100），5/20早8点开始推送红点提醒</li>
+              <li><strong>5/22 0点：</strong>券档扩充至5张，新增80-10 / 2000-200两档</li>
+            </ul>
+            <p style="margin-top:6px;color:var(--text-muted);font-size:10px">*具体以小店官方实际发布为准</p>
           </div>
         </div>
         <div class="detail-block">
@@ -561,16 +576,46 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
               <li><strong>叠加：</strong>日常货补与618满减<span class="hl">互斥</span></li>
               <li><strong>退款：</strong>退款后券值自动回退</li>
               <li><strong>新店可报</strong>（但报名后不再享受新商减佣重复激励）</li>
-              <li><strong>ECPM精排扶持：</strong>报名618活动即获大促标签 → 推荐端召回路径加权 + ECPM精排扶持 → 广告竞争力提升（5/30前完成接入即全期生效）</li>
+              <li><strong>广告竞争力自动提升：</strong>报名618活动后，您的商品在广告竞价中将获得<span class="hl">平台额外加权扶持</span>——相当于同样的出价能拿到更多曝光。本次618所有报名商品均自动享受（覆盖范围远超520），<span class="hl">5/30前完成报名即全期生效</span></li>
             </ul>
           </div>
         </div>
         <div class="detail-block">
-          <div class="detail-label">📄 报名指引 & QA</div>
+          <div class="detail-label">🎯 618补贴商品 · 四场景行动指引</div>
+          <div class="detail-text">
+            <p style="margin-bottom:8px">本次618平台已明确四类补贴商品场景，商家可根据自身商品所在场景执行对应动作：</p>
+            <ul>
+              <li><strong>场景1 · 有消耗的补贴品（优先级最高）：</strong>已报名且正在投放的商品 → <span class="hl">加强创意基建 + 适当提升出价</span>，抓住大促窗口放大优势</li>
+              <li><strong>场景2 · 行业主推品未报名：</strong>日消耗超过1000元但尚未报名618 → <span class="hl">尽快报名618活动</span>，获得大促标签+补贴加持</li>
+              <li><strong>场景3 · 广告在投但补贴品未投放：</strong>客户有商品在投放，但报名了满减补贴的商品尚未投放 → <span class="hl">引导商家针对这些补贴品开启投放</span>，享受补贴+扶持双重加持</li>
+              <li><strong>场景4 · 已报名但未投放：</strong>已报名补贴但还没有开始广告投放 → <span class="hl">立即切入投放</span>，已有补贴加持，投放即享扶持</li>
+            </ul>
+            <p style="margin-top:10px"><strong>扶持机制：</strong>符合以上四个场景的商品，平台将在618期间通过<span class="hl">场景协同推荐策略</span>给予加权扶持（全部商品接入底池，区别于520仅部分品），包括召回路径加权 + ECPM精排扶持 + 精排扶持金测算中——即报名投放的商品，广告竞争力自动提升。</p>
+            <p style="margin-top:6px;color:#93c5fd"><strong>👉 建议：</strong>联系您的行业运营或直客同学，确认自己的商品属于哪个场景，并尽快执行对应动作。</p>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">💡 成本计算示例（160-20券，服饰类目商家出资60%）</div>
           <div class="detail-text">
             <ul>
-              <li><a href="https://docs.qq.com/doc/DUnFxRnFrQ1FxdEFF?state=weworklogin" target="_blank" style="color:#93c5fd;text-decoration:underline">📘 全资商家版A → K800品牌适用</a></li>
-              <li><a href="https://docs.qq.com/doc/DUnVqUHFTZEJGbkJs?state=weworklogin" target="_blank" style="color:#93c5fd;text-decoration:underline">📗 混资商家版 → 大盘商家适用</a></li>
+              <li>A商品标价200 → 店铺券-50 → 150元，B商品标价120 → 店铺券-20 → 100元</li>
+              <li>满减分摊：A=(150/250)×20=12元；B=(100/250)×20=8元</li>
+              <li>A商家承担=12×60%=<strong>7.2元</strong>→ 结算142.8元；B商家承担=4.8元 → 结算95.2元</li>
+            </ul>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">❓ 关键QA</div>
+          <div class="detail-text">
+            <ul>
+              <li><strong>Q：用户每个id限领几次？</strong><br>A：每周单用户3张券，限活动周期内使用，每次只能使用一张</li>
+              <li><strong>Q：用户在哪里领取？</strong><br>A：每周五自动发送，用户无需手动领取。右上角小舌头618专区、直播货架banner、小店与卡包活动专区、商品外显和详情页价格位等均有满减提示</li>
+              <li><strong>Q：出资比例怎么确定？</strong><br>A：平台根据商品所属类目约定，技术服务费相同类目比例相同</li>
+              <li><strong>Q：膨胀券影响商家成本吗？</strong><br>A：不影响。膨胀部分由平台全额承担</li>
+              <li><strong>Q：报了618满减还能报官方补贴吗？</strong><br>A：不可以，同一商品同一活动周期仅可择一</li>
+              <li><strong>Q：全资 vs 混资？</strong><br>A：混资=基础普惠，全资=平台100%承担（优质品牌定邀）</li>
+              <li><strong>Q：混资比例？</strong><br>A：统一费率类目，固定比例。报名时已明确平台与商家各自承担部分</li>
+              <li><strong>Q：可以叠加什么？</strong><br>A：可与直播专享价、店铺优惠券叠加；<span class="hl">不与其他平台补贴、国家/地方补贴、其他优惠券叠加</span></li>
             </ul>
           </div>
         </div>
@@ -709,87 +754,130 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
       <span class="card-time">⏰ 5/31-6/21</span>
     </div>
     <div class="card">
-      <div class="card-head"><span class="card-icon">🔍</span><span class="card-title">大促商品场景召回支路</span></div>
-      <div class="card-brief">针对大促节点拓品&优质活动品起量场景，提供小店场景推荐召回支路加权，支持商品起量&转化效果提升</div>
-      <div class="card-action"><span class="label">做什么：</span><br>① <strong>报名小店618跨店满减补贴活动</strong>（大促报名商品投广，有望获得ECPM精排扶持）<br>② 围绕520、端午、父亲节等节点适配商品，做好<strong>商品标题、商品卡、素材创意制作</strong>（带"618"节点元素）<br>③ 对于进入支路扶持的商品，引导加大竞价投放预算</div>
-      <div class="card-reward"><span class="label">享什么：</span>进入场景召回支路获额外曝光 + ECPM精排扶持 → 商品起量&转化提升</div>
+      <div class="card-head"><span class="card-icon">🔍</span><span class="card-title">618活动商品 · 额外曝光加持</span></div>
+      <div class="card-brief">报名618活动的商品，平台会在推荐场景中给予更多曝光机会，帮助商品更快起量、提升转化</div>
+      <div class="card-action"><span class="label">做什么：</span><br>① <strong>报名618跨店满减活动</strong>，让商品获得大促标签<br>② 围绕520/端午/父亲节等节点，优化<strong>商品标题、商品卡、素材创意</strong>（建议带"618"元素）<br>③ 适当加大投放预算，配合平台流量放大效果</div>
+      <div class="card-reward"><span class="label">享什么：</span>平台自动在推荐场景中优先展示你的商品 + ECPM精排扶持 → 商品曝光和转化双提升</div>
       <span class="card-time">⏰ 5月底上线</span>
     </div>
   </div>
 </div>
 
 <!-- ===== 模块3: 客户行动清单 Timeline ===== -->
-<div class="wrap" style="padding-top:60px;padding-bottom:40px">
-  <div class="panel-title">PART 03</div>
-  <div class="panel-heading">618 客户行动清单 · Timeline</div>
+<div style="padding:60px 40px 40px;max-width:100%">
+  <div class="panel-title" style="max-width:1200px;margin:0 auto">PART 03</div>
+  <div class="panel-heading" style="max-width:1200px;margin:0 auto 20px">618 客户行动清单 · Timeline</div>
 
-  <!-- 横向时间线 -->
-  <div class="timeline-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-    <!-- 阶段1 -->
-    <div style="padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid #fb923c">
-      <div style="font-size:13px;font-weight:700;color:#fb923c;margin-bottom:4px">即刻行动</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">5/22前</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>报名618跨店满减补贴活动</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>报名直播大场激励</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:9px;font-weight:700;margin-right:4px">广告基建</span>开启AIGC创意增强MAX</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:9px;font-weight:700;margin-right:4px">广告基建</span>开启组件全库智选</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:9px;font-weight:700;margin-right:4px">广告基建</span>开启直播间+商品双重表达</div>
+  <!-- 横向时间轴（全宽） -->
+  <div style="position:relative;overflow-x:auto;padding:20px 0 40px">
+    <!-- 主轴线 -->
+    <div style="position:absolute;top:52px;left:0;right:0;height:3px;background:linear-gradient(90deg,#fb923c,#fbbf24,#93c5fd,rgba(170,210,255,.4),#f87171,rgba(100,180,255,.5));border-radius:2px"></div>
+
+    <!-- 时间轴节点容器 -->
+    <div style="display:flex;position:relative;gap:0">
+
+      <!-- 节点1 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:#fb923c;margin-bottom:8px;white-space:nowrap">即刻行动</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:#fb923c;border:3px solid var(--bg);box-shadow:0 0 0 2px #fb923c;z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">5/22前</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-top:2px solid #fb923c;border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>报名618跨店满减</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>报名直播大场激励</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:8px;font-weight:700;margin-right:3px">基建</span>开启AIGC创意增强MAX</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:8px;font-weight:700;margin-right:3px">基建</span>开启组件全库智选</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:8px;font-weight:700;margin-right:3px">基建</span>开启直播间+商品双重表达</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">行动</span>确认商品所在四场景</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- 阶段2 -->
-    <div style="padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid #fbbf24">
-      <div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:4px">蓄水储备</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">5/22 - 5/29</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:9px;font-weight:700;margin-right:4px">广告基建</span>制作618节点商品标题/卡片/创意</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;font-weight:700;margin-right:4px">工具相关</span>申请全店托管开白</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;font-weight:700;margin-right:4px">工具相关</span>规划大场直播排期</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:9px;font-weight:700;margin-right:4px">预算</span>按20%预算持续投放</div>
+
+      <!-- 节点2 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:8px;white-space:nowrap">蓄水储备</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:#fbbf24;border:3px solid var(--bg);box-shadow:0 0 0 2px #fbbf24;z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">5/22 - 5/29</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-top:2px solid #fbbf24;border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:8px;font-weight:700;margin-right:3px">基建</span>制作618节点标题/卡片/创意</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">能力</span>申请全店托管开白</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">能力</span>规划大场直播排期</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">行动</span>补贴品加基建+提出价</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:8px;font-weight:700;margin-right:3px">预算</span>按20%预算持续投放</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- 阶段3 -->
-    <div style="padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid #93c5fd">
-      <div style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:4px">开门红</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">5/30 - 6/1</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;font-weight:700;margin-right:4px">工具相关</span>开启专场放量+直播快推</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>确认大促标签&氛围标识生效</div>
+
+      <!-- 节点3 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:#93c5fd;margin-bottom:8px;white-space:nowrap">开门红</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:#93c5fd;border:3px solid var(--bg);box-shadow:0 0 0 2px #93c5fd;z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">5/30 - 6/1</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-top:2px solid #93c5fd;border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">能力</span>开启专场放量+直播快推</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>确认大促标签&氛围标识生效</div>
+          </div>
+        </div>
       </div>
+
+      <!-- 节点4 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;white-space:nowrap">场景期</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:rgba(170,210,255,.6);border:3px solid var(--bg);box-shadow:0 0 0 2px rgba(170,210,255,.4);z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">6/2 - 6/12</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-top:2px solid rgba(170,210,255,.5);border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:8px;font-weight:700;margin-right:3px">预算</span>25%预算持续投放</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:8px;font-weight:700;margin-right:3px">基建</span>6/3-4储备素材弹药库</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>滚动参加大场激励</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 节点5 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:8px;white-space:nowrap">🔥 高潮爆发</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:#f87171;border:3px solid var(--bg);box-shadow:0 0 0 2px #f87171,0 0 12px rgba(248,113,113,.4);z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">6/13 - 6/18</div>
+        <div style="background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.15);border-top:2px solid #f87171;border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:8px;font-weight:700;margin-right:3px">预算</span>全量加大投放预算</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">能力</span>专场放量+快推全开</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>确保满减订单≥50%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 节点6 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 6px">
+        <div style="font-size:11px;font-weight:700;color:rgba(100,180,255,.8);margin-bottom:8px;white-space:nowrap">返场收官</div>
+        <div style="width:14px;height:14px;border-radius:50%;background:rgba(100,180,255,.6);border:3px solid var(--bg);box-shadow:0 0 0 2px rgba(100,180,255,.5);z-index:2;margin-bottom:4px"></div>
+        <div style="font-size:9px;color:var(--text-muted);margin-bottom:12px">6/19 - 6/21</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-top:2px solid rgba(100,180,255,.5);border-radius:10px;padding:12px;width:100%;min-height:140px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);line-height:1.5">
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:#4ade80;font-size:8px;font-weight:700;margin-right:3px">能力</span>持续自播（端午/父亲节）</div>
+            <div><span style="display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(249,115,22,.1);color:#fb923c;font-size:8px;font-weight:700;margin-right:3px">政策</span>最后一轮大场激励</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+  <p style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px">← 可横向滑动查看完整时间轴 →</p>
+</div>
 
-  <div class="timeline-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px">
-    <!-- 阶段4 -->
-    <div style="padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--text-muted)">
-      <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:4px">场景期</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">6/2 - 6/12</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:9px;font-weight:700;margin-right:4px">预算</span>25%预算持续投放</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(100,180,255,.1);color:#93c5fd;font-size:9px;font-weight:700;margin-right:4px">广告基建</span>6/3-4储备素材弹药库</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>滚动参加大场激励</div>
-      </div>
-    </div>
-    <!-- 阶段5 -->
-    <div style="padding:20px;border-radius:12px;background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.15);border-top:3px solid #f87171">
-      <div style="font-size:13px;font-weight:700;color:#f87171;margin-bottom:4px">🔥 高潮爆发</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">6/13 - 6/18</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;font-size:9px;font-weight:700;margin-right:4px">预算</span>全量加大投放预算</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;font-weight:700;margin-right:4px">工具相关</span>专场放量+快推全开</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>确保满减订单≥50%</div>
-      </div>
-    </div>
-    <!-- 阶段6 -->
-    <div style="padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid rgba(100,180,255,.5)">
-      <div style="font-size:13px;font-weight:700;color:rgba(100,180,255,.8);margin-bottom:4px">返场收官</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px">6/19 - 6/21</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;font-weight:700;margin-right:4px">工具相关</span>持续自播（端午/父亲节）</div>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.5"><span style="display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(249,115,22,.1);color:#fb923c;font-size:9px;font-weight:700;margin-right:4px">小店扶持</span>最后一轮大场激励</div>
-      </div>
-    </div>
-  </div>
+<div class="tb-status" id="tbStatus">点击文字即可编辑<br>Cmd+S 导出</div>
+  <button onclick="exportHTML()">💾 导出 HTML</button>
+  <button class="btn-reset" onclick="resetContent()">↩️ 清除改动</button>
+</div>
+
+<div class="et-status" id="etStatus">选择导出模式</div>
+  <div class="et-scale"><span class="et-scale-label">分辨率</span><button data-scale="1">1x</button><button data-scale="2" class="active">2x</button><button data-scale="3">3x</button></div>
+  <button onclick="exportFullPage()">📜 整页长图</button>
+  <button onclick="exportCurrentSection()">📸 当前Tab</button>
+  <button onclick="exportAllSections()">📚 批量导出</button>
 </div>
 
 <!-- ===== JS ===== -->
@@ -805,5 +893,6 @@ function toggleCard(card){
   }
 }
 </script>
+
 </body>
 </html>
