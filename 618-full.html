@@ -382,14 +382,56 @@ body.exporting .export-toolbar,body.exporting .edit-toolbar{visibility:hidden!im
 
 /* ===== 响应式 ===== */
 @media(max-width:768px){
+  /* 全局 */
   .wrap{padding:0 16px}
   .hero{padding:40px 16px;min-height:auto}
   .hero h1{font-size:24px}
+  .hero .sub{font-size:13px}
+  .hero .period{font-size:11px;margin-bottom:24px}
+  .panel-heading{font-size:20px;margin-bottom:24px}
+  .panel-title{font-size:10px}
   .cards{grid-template-columns:1fr}
   .card.expanded{grid-column:auto}
+  .card-detail{overflow-x:auto}
+  .cmp-table{display:block;overflow-x:auto;white-space:nowrap}
   .tabs{flex-wrap:wrap;gap:6px}
   .panel{padding:40px 0}
-  .panel-heading{font-size:22px}
+  .sub-dim-label{font-size:11px;margin-top:28px}
+}
+
+/* 移动端：PART01经营六盘 3列→1列 */
+@media(max-width:768px){
+  .wrap>[style*="grid-template-columns:repeat(3"]{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* 移动端：PART02投放方法论 1:2列→纵向 */
+@media(max-width:768px){
+  .wrap>[style*="grid-template-columns:1fr 2fr"]{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* 移动端：PART03小店政策 2:1列→单列 */
+@media(max-width:768px){
+  [style*="grid-template-columns:2fr 1fr"]{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* 移动端：PART05 Timeline容器padding */
+@media(max-width:768px){
+  [style*="padding:60px 40px 40px"]{
+    padding:40px 16px 40px!important;
+  }
+}
+
+/* 移动端：报名指引链接换行 */
+@media(max-width:768px){
+  [style*="display:flex;gap:12px"]{
+    flex-direction:column!important;
+  }
 }
 </style>
 </head>
